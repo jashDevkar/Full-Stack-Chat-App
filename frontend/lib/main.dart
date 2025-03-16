@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/auth/bloc/auth_bloc.dart';
 import 'package:frontend/auth/pages/register_page.dart';
 import 'package:frontend/core/theme.dart';
-import 'package:frontend/core/widgets/loader.dart';
 import 'package:frontend/pages/home_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -35,18 +34,15 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
     return MaterialApp(
-      navigatorKey: navigatorKey,
       theme: DarkTheme.theme,
       debugShowCheckedModeBanner: false,
       home: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
           if (state is AuthLogedIn) {
-            return HomePage();
+            return const HomePage();
           } else {
-            return RegisterPage();
+            return const RegisterPage();
           }
         },
       ),

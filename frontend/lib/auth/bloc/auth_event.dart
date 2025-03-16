@@ -17,6 +17,7 @@ class OnRegisterButtonPressed extends AuthEvent {
   });
 }
 
+// ignore: must_be_immutable
 class OnLoginButtonPressed extends AuthEvent {
   final String email;
   final String password;

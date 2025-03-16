@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/model/user_model.dart';
 import 'package:frontend/services/auth/auth_service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -10,6 +11,9 @@ part 'auth_event.dart';
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
+  UserModel _user = UserModel(token: "", name: "", email: "", imageUrl: "");
+
+  UserModel get user => _user;
   AuthService authService = AuthService();
   final box = Hive.box('myBox');
 
@@ -38,11 +42,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.password,
         image: "jbjb",
       );
-      print(jsonDecode(result?.body ?? ""));
+
       if (result != null) {
-        final response = jsonDecode(result.body);
+        final Map<String, dynamic> response = jsonDecode(result.body);
         if (result.statusCode == 200) {
-          await box.put('token', response['token']);
+          //convert data into user model
+          _user = UserModel.fromMap(response);
+          final Map<String, dynamic> userData = _user.toMap();
+
+          // store that data
+          await box.put('userData', userData);
+
           emit(AuthLogedIn(loginMessage: response['message']));
           return;
         }
@@ -67,23 +77,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     try {
+      final navigator = Navigator.of(event.context);
       final http.Response? result = await authService.loginUser(
         email: event.email,
         password: event.password,
       );
 
-      // print(result?.body);
-
       if (result != null) {
-        final response = jsonDecode(result.body);
+        final Map<String, dynamic> response = await jsonDecode(result.body);
 
         if (result.statusCode == 200) {
-          await box.put('token', response['token']);
-
-          print(response['message']);
+          _user = UserModel.fromMap(response);
+          final Map<String, dynamic> userData = _user.toMap();
+          await box.put('userData', userData);
 
           emit(AuthLogedIn(loginMessage: response['message']));
-
+          navigator.pop();
           return;
         }
         emit(AuthFailure(errorMessage: response['message']));
@@ -107,13 +116,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     CheckUserIsLogedIn event,
     Emitter emit,
   ) async {
-    final String? token = await box.get('token');
-    if (token == null) {
+    final Map<dynamic, dynamic>? userData = await box.get('userData');
+    if (userData == null) {
       emit(AuthInitial());
       return;
     }
 
-    if (token.isNotEmpty) {
+    if (userData.isNotEmpty) {
+      _user = UserModel.fromMap(userData);
       emit(AuthLogedIn());
       return;
     }
@@ -125,11 +135,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter emit,
   ) async {
     await box.clear();
+    _user = UserModel(token: "", name: "", email: "", imageUrl: "");
     emit(AuthInitial());
   }
 
   clearLocalStorageCallback(ClearLocalStorage event, Emitter emit) async {
     await box.clear();
+    _user = UserModel(token: "", name: "", email: "", imageUrl: "");
     emit(AuthInitial());
   }
 }

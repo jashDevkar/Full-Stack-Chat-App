@@ -21,11 +21,11 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // console.log(isPasswordCorrect);
+       
         const user = await User.findOne({ email });
 
         if (!user) {
-            res.status(401).json({ message: "Invalid credentials" });
+            res.status(401).json({ message: "User doesn't exist" });
             return;
         }
 
@@ -40,9 +40,15 @@ const login = async (req, res) => {
             return;
         }
 
+        const userData = {...user._doc}
+        delete userData.password; //remove password from response
+        delete userData.friendRequests;
+        delete userData.friends;
+        delete userData.sentFriendRequests;
+
 
         const token = createToken(user._id);
-        res.status(200).json({ message: "User loged in successfully", token });
+        res.status(200).json({ message: "User loged in successfully", token ,...userData});
 
 
 

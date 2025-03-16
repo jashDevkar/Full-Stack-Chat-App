@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:frontend/core/constants.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
@@ -10,7 +11,7 @@ class AuthService {
     required String password,
   }) async {
     try {
-      final url = Uri.parse("http://192.168.0.106:8000/register");
+      final url = Uri.parse("${Constants.url}/register");
 
       final response = await http.post(
         url,
@@ -18,7 +19,7 @@ class AuthService {
           'name': name,
           'email': email,
           'password': password,
-          'image':
+          'imageUrl':
               "https://yt3.ggpht.com/yti/ANjgQV-ouSo8nKvQ8z1g318n06gKuEP5I-m5K5hYa1Te_fwck9A=s88-c-k-c0x00ffffff-no-rj",
         }),
         headers: {'Content-Type': 'application/json'},
@@ -33,7 +34,7 @@ class AuthService {
 
   Future loginUser({required String email, required String password}) async {
     try {
-      final url = Uri.parse("http://192.168.0.106:8000/login");
+      final url = Uri.parse("${Constants.url}/login");
 
       final http.Response response = await http.post(
         url,
