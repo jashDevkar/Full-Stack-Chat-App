@@ -37,6 +37,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   void dispose() {
+    // print('dispose called');
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -58,16 +59,18 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthSuccess) {
+          print(state.runtimeType);
+          if (state is AuthLogedIn) {
+            if (state.loginMessage != null) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.loginMessage ?? "")));
+            }
+          }
+          if (state is AuthFailure) {
             ScaffoldMessenger.of(
               context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
-
-            _emailController.clear();
-            _passwordController.clear();
-            _confirmPasswordController.clear();
-            _nameController.clear();
-            imagePicked.value = null;
+            ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
           }
         },
         builder: (context, state) {
@@ -235,9 +238,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             () => Navigator.push(
                               context,
                               PageTransition(
-                                type: PageTransitionType.rightToLeftJoined,
-                                childCurrent: widget,
-                                child: const LoginPage(),
+                                type: PageTransitionType.rightToLeft,
+                                child: LoginPage(),
                               ),
                             ),
                         child: const Text(

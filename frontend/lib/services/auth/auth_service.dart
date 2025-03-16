@@ -10,7 +10,7 @@ class AuthService {
     required String password,
   }) async {
     try {
-      final url = Uri.parse("http://10.10.24.84:8000/register");
+      final url = Uri.parse("http://192.168.0.106:8000/register");
 
       final response = await http.post(
         url,
@@ -33,9 +33,9 @@ class AuthService {
 
   Future loginUser({required String email, required String password}) async {
     try {
-      final url = Uri.parse("http://10.10.24.84:800/login");
+      final url = Uri.parse("http://192.168.0.106:8000/login");
 
-      final response = await http.post(
+      final http.Response response = await http.post(
         url,
         body: jsonEncode({'email': email, 'password': password}),
         headers: {'Content-Type': 'application/json'},

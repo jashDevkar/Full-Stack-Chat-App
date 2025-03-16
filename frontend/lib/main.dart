@@ -35,14 +35,14 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
     return MaterialApp(
+      navigatorKey: navigatorKey,
       theme: DarkTheme.theme,
       debugShowCheckedModeBanner: false,
       home: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          if (state is AuthLoading) {
-            return const Loader();
-          }
           if (state is AuthLogedIn) {
             return HomePage();
           } else {

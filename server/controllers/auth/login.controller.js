@@ -21,7 +21,7 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-     
+        // console.log(isPasswordCorrect);
         const user = await User.findOne({ email });
 
         if (!user) {
@@ -32,6 +32,7 @@ const login = async (req, res) => {
         
         const { password: hashedPassword } = user
         const isPasswordCorrect = await bcrypt.compare(password, hashedPassword);
+
 
    
         if (!isPasswordCorrect) {
@@ -48,7 +49,7 @@ const login = async (req, res) => {
     } catch (e) {
 
         //server error
-        res.status(500).json({ message: e.message });
+        res.status(500).json({ message: "Server error: "+e.message });
     }
 }
 

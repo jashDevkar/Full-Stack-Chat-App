@@ -33,14 +33,14 @@ class _LoginPage extends State<LoginPage> {
       ),
       body: BlocConsumer<AuthBloc, AuthState>(
         listener: (context, state) {
-          if (state is AuthSuccess) {
-            BlocProvider.of<AuthBloc>(context).add(CheckUserIsLogedIn());
+          if (state is AuthLogedIn) {
+            // BlocProvider.of<AuthBloc>(context).add(CheckUserIsLogedIn());  
             Navigator.pop(context);
           }
         },
         builder: (context, state) {
           if (state is AuthLoading) {
-            return Loader();
+            return const Loader();
           }
           return SingleChildScrollView(
             padding: const EdgeInsets.only(
@@ -55,7 +55,7 @@ class _LoginPage extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 spacing: 20.0,
                 children: [
-                  Image.asset("assets/images/login.png", height: 80),
+                  Image.asset("assets/images/register.png", height: 80),
 
                   // Email Field
                   InputField(
@@ -102,8 +102,8 @@ class _LoginPage extends State<LoginPage> {
                     onPressed: () async {
                       BlocProvider.of<AuthBloc>(context).add(
                         OnLoginButtonPressed(
-                          email: _emailController.text,
                           context: context,
+                          email: _emailController.text,
                           password: _passwordController.text,
                         ),
                       );

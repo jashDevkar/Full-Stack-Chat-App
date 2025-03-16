@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/services/auth/auth_service.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:http/http.dart' as http;
 
 part 'auth_event.dart';
 part 'auth_state.dart';
@@ -28,21 +29,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void onRegisterButtonPressedCallback(
     OnRegisterButtonPressed event,
-    Emitter emit,
+    Emitter<AuthState> emit,
   ) async {
     try {
-      final result = await authService.registerUser(
+      final http.Response? result = await authService.registerUser(
         name: event.name,
         email: event.email,
         password: event.password,
         image: "jbjb",
       );
+      print(jsonDecode(result?.body ?? ""));
       if (result != null) {
+        final response = jsonDecode(result.body);
         if (result.statusCode == 200) {
-          emit(AuthSuccess(message: "Account created successfully"));
+          await box.put('token', response['token']);
+          emit(AuthLogedIn(loginMessage: response['message']));
           return;
         }
-        emit(AuthFailure(errorMessage: jsonDecode(result.body)));
+        emit(AuthFailure(errorMessage: response['message']));
       } else {
         emit(
           AuthFailure(errorMessage: 'Registration failed. Please try again.'),
@@ -60,24 +64,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void onLoginButtonPressedCallback(
     OnLoginButtonPressed event,
-    Emitter emit,
+    Emitter<AuthState> emit,
   ) async {
     try {
-      final result = await authService.loginUser(
+      final http.Response? result = await authService.loginUser(
         email: event.email,
         password: event.password,
       );
-      if (result != null) {
-        if (result.statusCode == 200) {
-          final response = jsonDecode(result.body);
 
+      // print(result?.body);
+
+      if (result != null) {
+        final response = jsonDecode(result.body);
+
+        if (result.statusCode == 200) {
           await box.put('token', response['token']);
 
-          emit(AuthSuccess(message: "loged in"));
-          Navigator.pop(event.context);
+          print(response['message']);
+
+          emit(AuthLogedIn(loginMessage: response['message']));
+
           return;
         }
-        emit(AuthFailure(errorMessage: jsonDecode(result.body)));
+        emit(AuthFailure(errorMessage: response['message']));
       } else {
         emit(
           AuthFailure(

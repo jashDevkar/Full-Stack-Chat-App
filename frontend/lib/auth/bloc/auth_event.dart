@@ -20,7 +20,7 @@ class OnRegisterButtonPressed extends AuthEvent {
 class OnLoginButtonPressed extends AuthEvent {
   final String email;
   final String password;
-  final BuildContext context;
+  BuildContext context;
 
   OnLoginButtonPressed({
     required this.email,
@@ -33,5 +33,4 @@ class OnLogoutButtonPressed extends AuthEvent {}
 
 class CheckUserIsLogedIn extends AuthEvent {}
 
-
-class ClearLocalStorage extends AuthEvent{}
+class ClearLocalStorage extends AuthEvent {}
