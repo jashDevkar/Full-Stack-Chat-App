@@ -135,7 +135,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter emit,
   ) async {
     await box.clear();
-    _user = UserModel(token: "", name: "", email: "", imageUrl: "");
     emit(AuthInitial());
   }
 
