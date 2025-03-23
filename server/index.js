@@ -7,15 +7,20 @@ import passport from 'passport';
 import localStrategy from 'passport-local';
 import dotenv from 'dotenv';
 import jwt from 'jsonwebtoken';
-import User from './models/user.model.js';
-import Message from './models/message.model.js';
+import User from './src/models/user.model.js';
+import Message from './src/models/message.model.js';
+// import multer from 'multer';
 
-import router from './routers/router.js';
+
+import router from './src/routers/router.js';
 
 
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 8000
+
+
+
 
 app.use(express.json())
 app.use(cors());
