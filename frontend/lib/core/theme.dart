@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 class DarkTheme {
   static final theme = ThemeData.dark().copyWith(
-
-    appBarTheme: AppBarTheme(),
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.deepPurple.shade600.withAlpha(100),
+      // color: Colors.white,
+    ),
 
     inputDecorationTheme: InputDecorationTheme(
       focusedBorder: OutlineInputBorder(

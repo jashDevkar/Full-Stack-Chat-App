@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:frontend/auth/bloc/auth_bloc.dart';
 import 'package:frontend/core/constants.dart';
 import 'package:http/http.dart' as http;
 
@@ -22,5 +23,10 @@ class ChatService {
       print(e);
       return [];
     }
+  }
+
+  Future<void> sendFriendRequest() async {
+    AuthBloc authBloc = AuthBloc();
+    print(authBloc.user.email);
   }
 }

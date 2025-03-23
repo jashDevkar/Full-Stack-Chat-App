@@ -53,7 +53,6 @@ class _RegisterPageState extends State<RegisterPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Register", style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.deepPurple.shade600.withAlpha(100),
         elevation: 2.0,
         centerTitle: true,
       ),
@@ -115,10 +114,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                   uiSettings: [
                                     AndroidUiSettings(
                                       toolbarTitle: 'Crop Image',
-                                      toolbarColor: Colors.deepPurple.shade600,
+                                      toolbarColor: Colors.deepPurple.shade600
+                                          .withAlpha(230),
                                       toolbarWidgetColor: Colors.white,
-                                      statusBarColor:
-                                          Colors.deepPurple.shade600,
+                                      statusBarColor: Colors.deepPurple.shade600
+                                          .withAlpha(230),
                                       backgroundColor: Colors.black,
                                     ),
                                   ],

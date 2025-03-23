@@ -13,6 +13,7 @@ import Message from './src/models/message.model.js';
 
 
 import router from './src/routers/router.js';
+import chatRouter from './src/routers/chat/chat.router.js';
 
 
 dotenv.config();
@@ -27,7 +28,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(passport.initialize())
 app.use(router);
-
+app.use(chatRouter);
 
 ///connect to mongoose
 mongoose.connect(process.env.MONGOOSE_URL).then(()=>console.log('connected to mongoose')).catch((e)=>console.log("Error while connecting to db",e))

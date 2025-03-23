@@ -23,7 +23,7 @@ class AuthService {
       request.fields['email'] = email;
       request.fields['password'] = password;
 
-      var _fileName = basename(image.path);
+      // var _fileName = basename(image.path);
 
       var mimeType = lookupMimeType(image.path) ?? "application/octet-stream";
 

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/auth/bloc/auth_bloc.dart';
 import 'package:frontend/auth/pages/register_page.dart';
 import 'package:frontend/core/theme.dart';
-import 'package:frontend/pages/home_page.dart';
+import 'package:frontend/chat/pages/home_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
