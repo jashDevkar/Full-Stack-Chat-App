@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/auth/bloc/auth_bloc.dart';
 import 'package:frontend/core/widgets/loader.dart';
 import 'package:frontend/model/user_model.dart';
-
 import 'package:frontend/services/chat/chat_service.dart';
 
 class HomePage extends StatefulWidget {
@@ -42,6 +41,8 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  int count = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,49 +73,53 @@ class _HomePageState extends State<HomePage> {
 
         backgroundColor: Colors.deepPurple.shade600.withAlpha(100),
       ),
-      body: ListView.builder(
-        itemCount: users.length,
-        itemBuilder: (context, index) {
-          final user = users[index];
-          return Container(
-            margin: EdgeInsets.only(top: 10.0),
-            child: Row(
-              spacing: 15.0,
-              children: [
-                ClipOval(
-                  child: Image(
-                    image: NetworkImage(user['imageUrl']),
-                    height: 50,
-                    width: 50,
-                  ),
-                ),
-                Expanded(
-                  child: Column(
-                    spacing: 4.0,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(user['name']),
-                      Text(
-                        user['email'],
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                  ),
-                  onPressed: () {},
-                  child: Text('Add friend'),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+      body:
+          loading
+              ? const Loader()
+              : ListView.builder(
+                itemCount: users.length,
+                itemBuilder: (context, index) {
+                  final user = users[index];
+                  return Container(
+                    margin: EdgeInsets.only(top: 10.0),
+                    child: Row(
+                      spacing: 15.0,
+                      children: [
+                        ClipOval(
+                          child: Image(
+                            image: NetworkImage(user['imageUrl']),
+                            height: 50,
+                            width: 50,
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            spacing: 2.0,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(user['name']),
+                              Text(
+                                user['email'],
+                                maxLines: 1,
+                                // style: TextStyle(),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                          ),
+                          onPressed: () {},
+                          child: Text('Add friend'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
     );
   }
 }

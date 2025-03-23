@@ -7,7 +7,7 @@ class OnRegisterButtonPressed extends AuthEvent {
   final String name;
   final String email;
   final String password;
-  final String image;
+  final File image;
 
   OnRegisterButtonPressed({
     required this.name,
@@ -35,3 +35,6 @@ class OnLogoutButtonPressed extends AuthEvent {}
 class CheckUserIsLogedIn extends AuthEvent {}
 
 class ClearLocalStorage extends AuthEvent {}
+
+
+class OnResetState extends AuthEvent {}

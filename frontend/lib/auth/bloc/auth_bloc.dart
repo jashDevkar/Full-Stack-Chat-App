@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +30,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<OnLogoutButtonPressed>(logoutButtonPressedCallback);
 
     on<ClearLocalStorage>(clearLocalStorageCallback);
+
+    on<OnResetState>(resetStateCallback);
   }
 
   void onRegisterButtonPressedCallback(
@@ -36,22 +39,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     try {
-      final http.Response? result = await authService.registerUser(
+      final http.StreamedResponse? result = await authService.registerUser(
         name: event.name,
         email: event.email,
         password: event.password,
-        image: "jbjb",
+        image: event.image,
       );
 
       if (result != null) {
-        final Map<String, dynamic> response = jsonDecode(result.body);
+        final responseBody = await result.stream.bytesToString();
+        final Map<String, dynamic> response = json.decode(responseBody);
+
         if (result.statusCode == 200) {
           //convert data into user model
           _user = UserModel.fromMap(response);
-          final Map<String, dynamic> userData = _user.toMap();
+
 
           // store that data
-          await box.put('userData', userData);
+          await box.put('userData', response);
 
           emit(AuthLogedIn(loginMessage: response['message']));
           return;
@@ -138,9 +143,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(AuthInitial());
   }
 
-  clearLocalStorageCallback(ClearLocalStorage event, Emitter emit) async {
+  void clearLocalStorageCallback(ClearLocalStorage event, Emitter emit) async {
     await box.clear();
     _user = UserModel(token: "", name: "", email: "", imageUrl: "");
+    emit(AuthInitial());
+  }
+
+  void resetStateCallback(OnResetState event, Emitter emit) {
     emit(AuthInitial());
   }
 }

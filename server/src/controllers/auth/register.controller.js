@@ -1,17 +1,23 @@
 import User from "../../models/user.model.js"
 import bcrypt, { hash } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-
+import { uploadOnCloudinary } from '../../utils/cloudinary.js';
 
 const register = async (req, res) => {
     //collect json data
-    const { name, email, password, imageUrl } = req.body;
+    const { name, email, password } = req.body;
 
     //check if user already exists
     const userExist = await User.findOne({ email });
 
     if (userExist) return res.status(400).json({ message: "User already exists" });
 
+
+    // console.log(req.file);
+    const response = await uploadOnCloudinary(req.file.path);
+    if (!response) return res.status(400).json({ message: "Failed to upload image" });
+
+    const imageUrl = response.secure_url;
 
 
 
@@ -22,7 +28,7 @@ const register = async (req, res) => {
     const newUser = new User({ name, email, password: hashedPassword, imageUrl });
 
 
-    //remove password from user object before sending it back to client  (to prevent password leakage)
+    //remove password from user object before sending it back to client (to prevent password leakage)
     const userData = { ...newUser._doc }
     delete userData.password;
     delete userData.friendRequests;

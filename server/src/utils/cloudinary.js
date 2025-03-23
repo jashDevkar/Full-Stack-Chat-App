@@ -22,11 +22,6 @@ const uploadOnCloudinary = async (filePath) => {
             resource_type: 'auto',
         });
 
-        console.log(response);
-        
-
-        console.log('File uploaded to Cloudinary:', response.url);
-
 
         return response;
     } catch (error) {

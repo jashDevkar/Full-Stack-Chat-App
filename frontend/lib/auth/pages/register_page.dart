@@ -57,7 +57,7 @@ class _RegisterPageState extends State<RegisterPage> {
         elevation: 2.0,
         centerTitle: true,
       ),
-      body: BlocConsumer<AuthBloc, AuthState>(
+      body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           print(state.runtimeType);
 
@@ -73,125 +73,128 @@ class _RegisterPageState extends State<RegisterPage> {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.errorMessage)));
+
+            BlocProvider.of<AuthBloc>(context).add(OnResetState());
           }
         },
-        builder: (context, state) {
-          if (state is AuthInitial || state is AuthFailure) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.only(
-                left: 16.0,
-                right: 16.0,
-                top: 25.0,
-                bottom: 16.0,
-              ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.only(
+            left: 16.0,
+            right: 16.0,
+            top: 25.0,
+            bottom: 16.0,
+          ),
 
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  spacing: 15.0,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ///image section and crop image section
-                    ValueListenableBuilder(
-                      valueListenable: imagePicked,
-                      builder: (context, image, child) {
-                        return ImageSection(
-                          image: image,
-                          onPressed: () {
-                            showBottomModal(
-                              context: context,
-                              onTap: (ImageSource source) async {
-                                Navigator.pop(context);
-                                XFile? pickedImage = await PickImage()
-                                    .pickImageFromSource(source);
-                                if (pickedImage == null) return;
-                                CroppedFile? croppedImage = await ImageCropper()
-                                    .cropImage(
-                                      sourcePath: pickedImage.path,
-                                      aspectRatio: const CropAspectRatio(
-                                        ratioX: 1,
-                                        ratioY: 1,
-                                      ),
-                                      uiSettings: [
-                                        AndroidUiSettings(
-                                          toolbarTitle: 'Crop Image',
-                                          toolbarColor: Colors.blue,
-                                          toolbarWidgetColor: Colors.white,
-                                          statusBarColor: Colors.blueAccent,
-                                          backgroundColor: Colors.black,
-                                        ),
-                                      ],
-                                    );
-                                if (croppedImage == null) return;
-                                imagePicked.value = File(croppedImage.path);
-                              },
-                            );
+          child: Form(
+            key: _formKey,
+            child: Column(
+              spacing: 15.0,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ///image section and crop image section
+                ValueListenableBuilder(
+                  valueListenable: imagePicked,
+                  builder: (context, image, child) {
+                    return ImageSection(
+                      image: image,
+                      onPressed: () {
+                        showBottomModal(
+                          context: context,
+                          onTap: (ImageSource source) async {
+                            Navigator.pop(context);
+                            XFile? pickedImage = await PickImage()
+                                .pickImageFromSource(source);
+                            if (pickedImage == null) return;
+                            CroppedFile? croppedImage = await ImageCropper()
+                                .cropImage(
+                                  sourcePath: pickedImage.path,
+                                  aspectRatio: const CropAspectRatio(
+                                    ratioX: 1,
+                                    ratioY: 1,
+                                  ),
+                                  uiSettings: [
+                                    AndroidUiSettings(
+                                      toolbarTitle: 'Crop Image',
+                                      toolbarColor: Colors.deepPurple.shade600,
+                                      toolbarWidgetColor: Colors.white,
+                                      statusBarColor:
+                                          Colors.deepPurple.shade600,
+                                      backgroundColor: Colors.black,
+                                    ),
+                                  ],
+                                );
+                            if (croppedImage == null) return;
+                            imagePicked.value = File(croppedImage.path);
                           },
                         );
                       },
-                    ),
+                    );
+                  },
+                ),
 
-                    // Name Field
-                    InputField(
-                      type: TextInputType.text,
-                      controller: _nameController,
-                      labelText: "Name",
-                      hintText: "Enter your name",
-                      validator:
-                          (value) =>
-                              value == null || value.isEmpty
-                                  ? "Name is required"
-                                  : null,
-                    ),
+                // Name Field
+                InputField(
+                  type: TextInputType.text,
+                  controller: _nameController,
+                  labelText: "Name",
+                  hintText: "Enter your name",
+                  validator:
+                      (value) =>
+                          value == null || value.isEmpty
+                              ? "Name is required"
+                              : null,
+                ),
 
-                    // Email Field
-                    InputField(
-                      controller: _emailController,
-                      labelText: "Email",
-                      hintText: "Enter your email",
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Email is required";
-                        } else if (!emailRegex.hasMatch(value)) {
-                          return "Enter a valid email";
-                        }
-                        return null;
-                      },
-                      type: TextInputType.emailAddress,
-                    ),
+                // Email Field
+                InputField(
+                  controller: _emailController,
+                  labelText: "Email",
+                  hintText: "Enter your email",
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Email is required";
+                    } else if (!emailRegex.hasMatch(value)) {
+                      return "Enter a valid email";
+                    }
+                    return null;
+                  },
+                  type: TextInputType.emailAddress,
+                ),
 
-                    // Password Field
-                    PasswordField(
-                      hintText: "Enter a password",
-                      labelText: "Password",
-                      controller: _passwordController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Password is required";
-                        } else if (value.length < 5) {
-                          return "Password must be at least 5 characters";
-                        }
-                        return null;
-                      },
-                    ),
+                // Password Field
+                PasswordField(
+                  hintText: "Enter a password",
+                  labelText: "Password",
+                  controller: _passwordController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Password is required";
+                    } else if (value.length < 5) {
+                      return "Password must be at least 5 characters";
+                    }
+                    return null;
+                  },
+                ),
 
-                    // Confirm Password Field
-                    PasswordField(
-                      hintText: "Re-enter your password",
-                      labelText: "Confirm password",
-                      controller: _confirmPasswordController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Confirm Password is required";
-                        } else if (value != _passwordController.text) {
-                          return "Passwords do not match";
-                        }
-                        return null;
-                      },
-                    ),
+                // Confirm Password Field
+                PasswordField(
+                  hintText: "Re-enter your password",
+                  labelText: "Confirm password",
+                  controller: _confirmPasswordController,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Confirm Password is required";
+                    } else if (value != _passwordController.text) {
+                      return "Passwords do not match";
+                    }
+                    return null;
+                  },
+                ),
 
-                    // Register Button
-                    ElevatedButton(
+                // Register Button
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    return ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         elevation: 4.0,
                         backgroundColor: Colors.deepPurple.shade600.withAlpha(
@@ -211,52 +214,56 @@ class _RegisterPageState extends State<RegisterPage> {
                           );
                           return;
                         }
+                        if (state is AuthLoading) {
+                          return;
+                        }
                         if (_formKey.currentState!.validate()) {
                           BlocProvider.of<AuthBloc>(context).add(
                             OnRegisterButtonPressed(
                               name: _nameController.text,
                               email: _emailController.text,
                               password: _passwordController.text,
-                              image: "dadkan",
+                              image: imagePicked.value!,
                             ),
                           );
                         }
                       },
-                      child: const Text("Register"),
-                    ),
+                      child:
+                          (state is AuthLoading)
+                              ? const Loader()
+                              : const Text("Register"),
+                    );
+                  },
+                ),
 
-                    // Navigate to Login
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Already have an account? ",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                        GestureDetector(
-                          onTap:
-                              () => Navigator.push(
-                                context,
-                                PageTransition(
-                                  type: PageTransitionType.rightToLeft,
-                                  child: LoginPage(),
-                                ),
-                              ),
-                          child: const Text(
-                            'Login instead',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                // Navigate to Login
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Already have an account? ",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    GestureDetector(
+                      onTap:
+                          () => Navigator.push(
+                            context,
+                            PageTransition(
+                              type: PageTransitionType.rightToLeft,
+                              child: LoginPage(),
+                            ),
                           ),
-                        ),
-                      ],
+                      child: const Text(
+                        'Login instead',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ],
                 ),
-              ),
-            );
-          } else {
-            return const Loader();
-          }
-        },
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
