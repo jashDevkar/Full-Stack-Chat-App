@@ -49,7 +49,7 @@ const createToken = (id) => {
         userId: id
     }
 
-    const token = jwt.sign(payload, "jaadu", { expiresIn: "1h" });
+    const token = jwt.sign(payload, "jaadu", { expiresIn: "30d" });
     return token;
 }
 

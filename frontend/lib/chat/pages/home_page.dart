@@ -24,13 +24,14 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     _userModel = BlocProvider.of<AuthBloc>(context).user;
+    // print(_userModel.token);
     fetchData();
     // print(_userModel.token);
   }
 
-  bool loading = true;
-
+  bool loading = false;
   Future<void> fetchData() async {
+    loading = true;
     final fetchedUsers = await chatService.fetchAllUsers(
       userToken: _userModel.token,
     );
@@ -81,11 +82,15 @@ class _HomePageState extends State<HomePage> {
                 onRefresh: () async {
                   // ChatService().sendFriendRequest();
                   // print(_userModel.token);
+
+                  fetchData();
                 },
                 child: ListView.builder(
                   itemCount: users.length,
                   itemBuilder: (context, index) {
                     final user = users[index];
+                    // final List<dynamic> isFriend = user['friendRequests'];
+                    // print(isFriend);
                     return UserList(user: user);
                   },
                 ),

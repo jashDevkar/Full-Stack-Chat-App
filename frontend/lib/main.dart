@@ -12,25 +12,16 @@ void main() async {
   await Hive.openBox("myBox");
   runApp(
     MultiBlocProvider(
-      providers: [BlocProvider(create: (_) => AuthBloc())],
+      providers: [
+        BlocProvider(create: (_) => AuthBloc()..add(CheckUserIsLogedIn())),
+      ],
       child: const MyApp(),
     ),
   );
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  void initState() {
-    super.initState();
-    BlocProvider.of<AuthBloc>(context).add(CheckUserIsLogedIn());
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -5,7 +5,6 @@ import 'package:frontend/core/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'package:mime/mime.dart';
-import 'package:path/path.dart';
 
 class AuthService {
   Future<http.StreamedResponse?> registerUser({
@@ -27,7 +26,7 @@ class AuthService {
 
       var mimeType = lookupMimeType(image.path) ?? "application/octet-stream";
 
-      print(image.path);
+      // print(image.path);
 
       request.files.add(
         await http.MultipartFile.fromPath(
@@ -68,8 +67,11 @@ class AuthService {
         headers: {'Content-Type': 'application/json'},
       );
 
+     
+
       return response;
     } catch (e) {
+      // print('error idr is pakda');
       print(e);
     }
   }

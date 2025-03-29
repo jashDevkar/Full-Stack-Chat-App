@@ -54,7 +54,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           //convert data into user model
           _user = UserModel.fromMap(response);
 
-
           // store that data
           await box.put('userData', response);
 
@@ -88,6 +87,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.password,
       );
 
+  
       if (result != null) {
         final Map<String, dynamic> response = await jsonDecode(result.body);
 
@@ -108,7 +108,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           ),
         );
       }
-    } on (Exception e,) {
+    } catch (e) {
+      print(e);
       emit(
         AuthFailure(
           errorMessage: 'An error occurred during login. Please try again.',

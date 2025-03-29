@@ -31,6 +31,8 @@ app.use(router);
 app.use(chatRouter);
 
 ///connect to mongoose
+
+// console.log(process.env.MONGOOSE_URL)
 mongoose.connect(process.env.MONGOOSE_URL).then(()=>console.log('connected to mongoose')).catch((e)=>console.log("Error while connecting to db",e))
 
 
@@ -41,7 +43,7 @@ app.get('/', (req, res) => {
 
 
 ///listen to server
-app.listen(port,()=>{
+app.listen(port,'0.0.0.0',()=>{
     // console.log(url)
-    console.log('Server is listening on port 8000');
+    console.log(`Server is listening on port ${port} `);
 })

@@ -21,6 +21,7 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
+    //    console.log("login request");
        
         const user = await User.findOne({ email });
 
@@ -67,7 +68,7 @@ const createToken = (id) => {
         userId: id
     }
 
-    const token = jwt.sign(payload, "jaadu", { expiresIn: "1h" });
+    const token = jwt.sign(payload, "jaadu", { expiresIn: "30d" });
     return token;
 }
 

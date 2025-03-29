@@ -6,6 +6,7 @@ import getUserData from '../controllers/chat/getUserData.controller.js';
 import sendFriendRequest from '../controllers/chat/send-friend-request.controller.js'
 import { uploadOnCloudinary } from '../utils/cloudinary.js';
 import upload from '../middleware/multer-upload.js';
+import verifyUser from '../middleware/verifyUser.js';
 
 
 
@@ -14,7 +15,7 @@ import upload from '../middleware/multer-upload.js';
 
 const testController = async(req,res)=>{
     try{
-        console.log(req.file);
+        // console.log(req.file);
         const response = await uploadOnCloudinary(req.file.path);
         if(!response) return res.status(400).json({message: "Failed to upload image"});
         res.json({message: "Image uploaded successfully"});
@@ -38,6 +39,14 @@ router.post("/login",login);
 
 router.get("/users/:token",getAllUsers);
 router.get("/getUserData/:token",getUserData);
+
+
+
+
+
+router.get("/",(req,res)=>{
+    res.status(200).send("Hello World");
+})
 
 
 

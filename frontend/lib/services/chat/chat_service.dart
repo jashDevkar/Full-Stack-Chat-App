@@ -11,6 +11,7 @@ class ChatService {
   Future<List> fetchAllUsers({String? userToken}) async {
     try {
       final url = Uri.parse("${Constants.url}/users/$userToken");
+      
       final http.Response response = await http.get(
         url,
         headers: {'Content-Type': 'application/json'},
