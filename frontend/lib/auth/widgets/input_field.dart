@@ -6,7 +6,8 @@ class InputField extends StatelessWidget {
     required this.controller,
     required this.labelText,
     required this.hintText,
-    required this.validator, required this.type,
+    required this.validator,
+    required this.type,
   });
 
   final TextEditingController controller;
@@ -20,7 +21,7 @@ class InputField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       keyboardType: type,
-      decoration: InputDecoration(labelText: labelText, hintText: hintText),
+      decoration: InputDecoration(hintText: hintText),
       validator: validator,
     );
   }

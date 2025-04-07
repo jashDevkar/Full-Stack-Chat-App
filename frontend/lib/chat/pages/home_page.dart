@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/auth/bloc/auth_bloc.dart';
+import 'package:frontend/chat/pages/notification_page.dart';
 import 'package:frontend/chat/widgets/user_list.dart';
 import 'package:frontend/core/widgets/loader.dart';
+import 'package:frontend/core/widgets/show_alert.dart';
 import 'package:frontend/model/user_model.dart';
 import 'package:frontend/services/chat/chat_service.dart';
+import 'package:page_transition/page_transition.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,56 +19,81 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late UserModel _userModel;
 
-  ChatService chatService = ChatService();
+  late ChatService chatService;
   List users = [];
 
   @override
   void initState() {
     super.initState();
 
+    chatService = ChatService(context);
     _userModel = BlocProvider.of<AuthBloc>(context).user;
-    // print(_userModel.token);
     fetchData();
     // print(_userModel.token);
   }
 
-  bool loading = false;
+  bool loading = true;
   Future<void> fetchData() async {
-    loading = true;
-    final fetchedUsers = await chatService.fetchAllUsers(
+    setState(() {
+      loading = true;
+    });
+
+    List fetchedUsers = await chatService.fetchAllUsers(
       userToken: _userModel.token,
     );
+
+    fetchedUsers =
+        fetchedUsers.where((item) => item['status'] != 'Accept').toList();
+
     setState(() {
       users = fetchedUsers;
-      print(users);
 
       loading = false;
     });
   }
 
-  int count = 0;
+  Future<void> sendRequest({
+    required String senderToken,
+    required String recieverId,
+  }) async {
+    await chatService.sendFriendRequest(
+      context: context,
+      senderToken: senderToken,
+      recieverId: recieverId,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: Builder(
+          builder: (context) {
+            return IconButton(
+              onPressed: () {
+                Scaffold.of(context).openDrawer();
+              },
+              icon: Icon(Icons.menu),
+            );
+          },
+        ),
+
         actions: [
           IconButton(
             onPressed: () {
-              // Navigate to chat screen
-              // chatService.openChat(context, null);
+              Navigator.push(
+                context,
+                PageTransition(
+                  type: PageTransitionType.rightToLeft,
+                  child: NotificationPage(),
+                ),
+              );
             },
-            icon: Icon(Icons.chat, color: Colors.white),
+            icon: Icon(Icons.notifications, color: Colors.white),
           ),
           IconButton(
             icon: Icon(Icons.group, color: Colors.white),
             onPressed: () {},
-          ),
-          IconButton(
-            icon: Icon(Icons.logout, color: Colors.white),
-            onPressed: () {
-              BlocProvider.of<AuthBloc>(context).add(OnLogoutButtonPressed());
-            },
           ),
         ],
         title: Text(
@@ -75,25 +103,82 @@ class _HomePageState extends State<HomePage> {
 
         backgroundColor: Colors.deepPurple.shade600.withAlpha(100),
       ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              child: Column(
+                spacing: 20,
+                children: [
+                  ClipOval(
+                    child: Image(
+                      image: NetworkImage(_userModel.imageUrl),
+                      height: 70,
+                      width: 70,
+                    ),
+                  ),
+                  Text(_userModel.name, style: TextStyle(fontSize: 18)),
+                ],
+              ),
+            ),
+            ListTile(
+              trailing: Icon(Icons.logout),
+              title: const Text('Logout'),
+              onTap: () {
+                // print('object');
+                showAlert(context);
+                // BlocProvider.of<AuthBloc>(context).add(OnLogoutButtonPressed());
+              },
+            ),
+          ],
+        ),
+      ),
+
+      ///check is data is present else show a 'no user found text'
+      ///every time on refresh show a
       body:
           loading
               ? const Loader()
               : RefreshIndicator(
                 onRefresh: () async {
-                  // ChatService().sendFriendRequest();
-                  // print(_userModel.token);
-
                   fetchData();
                 },
-                child: ListView.builder(
-                  itemCount: users.length,
-                  itemBuilder: (context, index) {
-                    final user = users[index];
-                    // final List<dynamic> isFriend = user['friendRequests'];
-                    // print(isFriend);
-                    return UserList(user: user);
-                  },
-                ),
+                child:
+                    users.isEmpty
+                        ? Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text('No users found'),
+                              TextButton(
+                                onPressed: fetchData,
+                                child: Text('Refresh'),
+                              ),
+                            ],
+                          ),
+                        )
+                        : ListView.builder(
+                          itemCount: users.length,
+                          itemBuilder: (context, index) {
+                            final user = users[index];
+                            return UserList(
+                              user: user,
+                              onPressCallback: () {
+                                if (user['status'] == 'Pending') {
+                                  return;
+                                }
+
+                                sendRequest(
+                                  senderToken: _userModel.token,
+                                  recieverId: user['_id'],
+                                );
+
+                                // print(user['_id']);
+                              },
+                            );
+                          },
+                        ),
               ),
     );
   }

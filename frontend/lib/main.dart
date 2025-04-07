@@ -4,6 +4,7 @@ import 'package:frontend/auth/bloc/auth_bloc.dart';
 import 'package:frontend/auth/pages/register_page.dart';
 import 'package:frontend/core/theme.dart';
 import 'package:frontend/chat/pages/home_page.dart';
+import 'package:frontend/core/widgets/initial_loader.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
@@ -30,6 +31,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
+          if (state is AuthInitialLoading) {
+            return const InitialLoader();
+          }
           if (state is AuthLogedIn) {
             return const HomePage();
           } else {

@@ -13,7 +13,7 @@ const register = async (req, res) => {
     if (userExist) return res.status(400).json({ message: "User already exists" });
 
 
-    // console.log(req.file);
+    console.log(name,email,password)
     const response = await uploadOnCloudinary(req.file.path);
     if (!response) return res.status(400).json({ message: "Failed to upload image" });
 

@@ -17,3 +17,6 @@ final class AuthFailure extends AuthState {
 
   AuthFailure({required this.errorMessage});
 }
+
+
+class AuthInitialLoading extends AuthState{}

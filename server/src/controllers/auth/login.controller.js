@@ -49,7 +49,7 @@ const login = async (req, res) => {
 
 
         const token = createToken(user._id);
-        res.status(200).json({ message: "User loged in successfully", token ,...userData});
+        res.status(200).json({ message: `${userData.name} you are now loged in!`, token ,...userData});
 
 
 

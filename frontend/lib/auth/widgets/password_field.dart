@@ -38,7 +38,7 @@ class _PasswordFieldState extends State<PasswordField> {
             obscure ? Icons.visibility_off : Icons.remove_red_eye_outlined,
           ),
         ),
-        labelText: widget.labelText,
+
         hintText: widget.hintText,
       ),
       obscureText: obscure,

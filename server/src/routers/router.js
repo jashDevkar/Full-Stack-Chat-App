@@ -37,7 +37,7 @@ router.post("/upload", upload.single('image'), testController);
 router.post("/register",upload.single('image'),register);
 router.post("/login",login);
 
-router.get("/users/:token",getAllUsers);
+router.get("/users/",verifyUser,getAllUsers);
 router.get("/getUserData/:token",getUserData);
 
 

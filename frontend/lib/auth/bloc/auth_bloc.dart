@@ -87,7 +87,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.password,
       );
 
-  
       if (result != null) {
         final Map<String, dynamic> response = await jsonDecode(result.body);
 
@@ -122,15 +121,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     CheckUserIsLogedIn event,
     Emitter emit,
   ) async {
-    final Map<dynamic, dynamic>? userData = await box.get('userData');
+
+    final Map<dynamic, dynamic>? userData = box.get('userData');
     if (userData == null) {
       emit(AuthInitial());
       return;
     }
 
     if (userData.isNotEmpty) {
-      _user = UserModel.fromMap(userData);
       emit(AuthLogedIn());
+      _user = UserModel.fromMap(userData);
       return;
     }
     emit(AuthInitial());

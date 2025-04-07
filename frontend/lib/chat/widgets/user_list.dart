@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 class UserList extends StatelessWidget {
   final Map<String, dynamic> user;
-  const UserList({super.key, required this.user});
+  final void Function()? onPressCallback;
+  const UserList({super.key, required this.user, this.onPressCallback});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: EdgeInsets.only(left: 10),
       margin: EdgeInsets.only(top: 10.0),
       child: Row(
         spacing: 15.0,
@@ -38,10 +40,8 @@ class UserList extends StatelessWidget {
               backgroundColor: Colors.transparent,
               elevation: 0,
             ),
-            onPressed: () {
-              print(user['_id']);
-            },
-            child: Text('Add friend'),
+            onPressed: onPressCallback,
+            child: Text(user['status'] ?? 'Accept'),
           ),
         ],
       ),

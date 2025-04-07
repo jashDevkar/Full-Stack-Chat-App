@@ -8,12 +8,21 @@ class DarkTheme {
     ),
 
     inputDecorationTheme: InputDecorationTheme(
-      focusedBorder: OutlineInputBorder(
+      border: UnderlineInputBorder(
         borderRadius: BorderRadius.circular(10.0),
+        borderSide: BorderSide(color: Colors.grey.shade100),
+      ),
+      focusedBorder: UnderlineInputBorder(
+        borderRadius: BorderRadius.circular(15.0),
         borderSide: BorderSide(color: Colors.white),
       ),
 
-      focusedErrorBorder: OutlineInputBorder(
+      enabledBorder: UnderlineInputBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        borderSide: BorderSide(color: Colors.grey.shade700),
+      ),
+
+      focusedErrorBorder: UnderlineInputBorder(
         borderRadius: BorderRadius.circular(10.0),
         borderSide: BorderSide(color: Colors.white),
       ),

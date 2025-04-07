@@ -87,7 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
           child: Form(
             key: _formKey,
             child: Column(
-              spacing: 15.0,
+              spacing: 20.0,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 ///image section and crop image section
@@ -148,6 +148,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 // Email Field
                 InputField(
                   controller: _emailController,
+                  //not using label text
                   labelText: "Email",
                   hintText: "Enter your email",
                   validator: (value) {
