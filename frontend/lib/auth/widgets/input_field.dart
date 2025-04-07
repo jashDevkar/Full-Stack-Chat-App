@@ -20,8 +20,9 @@ class InputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      
       keyboardType: type,
-      decoration: InputDecoration(hintText: hintText),
+      decoration: InputDecoration(hintText: hintText,),
       validator: validator,
     );
   }

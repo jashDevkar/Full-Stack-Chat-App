@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
     chatService = ChatService(context);
     _userModel = BlocProvider.of<AuthBloc>(context).user;
     fetchData();
-    // print(_userModel.token);
+    print(_userModel.token);
   }
 
   bool loading = true;
@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage> {
     List fetchedUsers = await chatService.fetchAllUsers(
       userToken: _userModel.token,
     );
+
 
     fetchedUsers =
         fetchedUsers.where((item) => item['status'] != 'Accept').toList();
@@ -108,6 +109,7 @@ class _HomePageState extends State<HomePage> {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
+              margin: EdgeInsets.all(0),
               child: Column(
                 spacing: 20,
                 children: [
@@ -165,7 +167,9 @@ class _HomePageState extends State<HomePage> {
                             return UserList(
                               user: user,
                               onPressCallback: () {
-                                if (user['status'] == 'Pending') {
+                                if (user['status'] == 'Pending' ||
+                                    user['status'] == 'Friends') {
+                                
                                   return;
                                 }
 

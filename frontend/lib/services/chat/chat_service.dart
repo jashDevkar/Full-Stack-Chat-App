@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 class ChatService {
   final BuildContext context;
   ChatService(this.context);
-  // final StreamController streamController = StreamController();
+  final StreamController notificationUsers = StreamController();
 
   Future<List> fetchAllUsers({String? userToken}) async {
     try {
@@ -76,6 +76,34 @@ class ChatService {
     } catch (e) {
       print(e);
       return [];
+    }
+  }
+
+  Future<void> acceptFriendRequest({
+    required String senderToken,
+    required String recieverId,
+    required BuildContext context,
+  }) async {
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final url = Uri.parse("${Constants.url}/chat/accept-friend-request/");
+
+      final response = await http.post(
+        url,
+        body: jsonEncode({'recieverId': recieverId}),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': senderToken,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        messenger.showSnackBar(
+          SnackBar(content: Text('Friend request accepted')),
+        );
+      }
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text('Server error')));
     }
   }
 }

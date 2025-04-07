@@ -14,12 +14,12 @@ class DarkTheme {
       ),
       focusedBorder: UnderlineInputBorder(
         borderRadius: BorderRadius.circular(15.0),
-        borderSide: BorderSide(color: Colors.white),
+        borderSide: BorderSide(color: Colors.white,width: 2.0),
       ),
 
       enabledBorder: UnderlineInputBorder(
         borderRadius: BorderRadius.circular(10.0),
-        borderSide: BorderSide(color: Colors.grey.shade700),
+        borderSide: BorderSide(color: Colors.grey.shade700, ),
       ),
 
       focusedErrorBorder: UnderlineInputBorder(

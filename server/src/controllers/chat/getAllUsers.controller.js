@@ -13,11 +13,14 @@ const getAllUsers = async (req, res) => {
             return res.status(404).json({ message: "No user found" });
         }
 
-
+        
         const filteredUser = allUsers.map(item => {
 
             const friends = JSON.stringify(item.friends)
             const filteredFriends = JSON.parse(friends);
+
+            console.log(item.friends);
+            
 
             if (filteredFriends.includes(userId)) {
                 item.status = 'Friends'

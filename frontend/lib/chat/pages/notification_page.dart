@@ -38,6 +38,7 @@ class _NotificationPageState extends State<NotificationPage> {
     final fetchedResponse = await chatService.fetchAllFriends(
       userToken: _userModel.token,
     );
+
     setState(() {
       friendRequests = fetchedResponse;
       loading = false;
@@ -82,15 +83,11 @@ class _NotificationPageState extends State<NotificationPage> {
                             return UserList(
                               user: user,
                               onPressCallback: () {
-                                // if (user['status'] == 'Pending') {
-                                //   return;
-                                // }
-                                // sendRequest(
-                                //   senderToken: _userModel.token,
-                                //   recieverId: user['_id'],
-                                // );
-
-                                // print(user['_id']);
+                                chatService.acceptFriendRequest(
+                                  senderToken: _userModel.token,
+                                  recieverId: user['_id'],
+                                  context: context,
+                                );
                               },
                             );
                           },
