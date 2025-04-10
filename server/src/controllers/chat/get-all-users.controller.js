@@ -8,6 +8,8 @@ const getAllUsers = async (req, res) => {
 
         const allUsers = await User.find({ _id: { $ne: userId } }).select("-password -__v ").lean();
 
+        // console.log(allUsers);
+        
         if(!allUsers){
             console.log('no users');
             return res.status(404).json({ message: "No user found" });
@@ -19,7 +21,7 @@ const getAllUsers = async (req, res) => {
             const friends = JSON.stringify(item.friends)
             const filteredFriends = JSON.parse(friends);
 
-            console.log(item.friends);
+            
             
 
             if (filteredFriends.includes(userId)) {

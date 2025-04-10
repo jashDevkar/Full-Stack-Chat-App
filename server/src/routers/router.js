@@ -1,7 +1,7 @@
 import express from 'express';
 import register from '../controllers/auth/register.controller.js';
 import login from '../controllers/auth/login.controller.js';
-import getAllUsers from '../controllers/chat/getAllUsers.controller.js';
+import getAllUsers from '../controllers/chat/get-all-users.controller.js';
 import getUserData from '../controllers/chat/getUserData.controller.js';
 import sendFriendRequest from '../controllers/chat/send-friend-request.controller.js'
 import { uploadOnCloudinary } from '../utils/cloudinary.js';
