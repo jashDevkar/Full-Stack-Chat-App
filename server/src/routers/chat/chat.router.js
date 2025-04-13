@@ -11,7 +11,7 @@ const chatRouter = express.Router();
 chatRouter.post("/chat/send-friend-request",verifyUser,sendFriendRequest)
 chatRouter.get("/chat/all-friend-requests",verifyUser,allFriendRequests)
 chatRouter.post("/chat/accept-friend-request",verifyUser,acceptFriendRequest)
-chatRouter.post("/chat/get-all-friends",verifyUser,getAllFriends)
+chatRouter.get("/chat/get-all-friends",verifyUser,getAllFriends)
 
 
 

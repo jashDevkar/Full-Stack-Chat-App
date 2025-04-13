@@ -1,3 +1,4 @@
+import path from "path";
 import User from "../../models/user.model.js";
 
 const getAllFriends = async (req, res) => {
@@ -5,10 +6,15 @@ const getAllFriends = async (req, res) => {
         const userId = req.userId;
 
 
-        const friends = await User.findById(userId).select('friends').populate().lean();
+        const friends = await User.findById(userId)
+        .select('friends')
+        .populate({path:'friends',select:'-password -friends -friendRequests -sentFriendRequests -__v'})
+        .lean();
+
+    
 
 
-        console.log(friends);
+        
 
 
         return res.status(200).json(friends);
