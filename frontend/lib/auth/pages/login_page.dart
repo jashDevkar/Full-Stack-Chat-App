@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/auth/bloc/auth_bloc.dart';
@@ -24,7 +26,7 @@ class _LoginPage extends State<LoginPage> {
 
   @override
   void dispose() {
-    print('login disposed');
+    log('login disposed');
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -124,10 +126,4 @@ class _LoginPage extends State<LoginPage> {
       ),
     );
   }
-
-  /*
-          
-          show loader for loading 
-          
-           */
 }

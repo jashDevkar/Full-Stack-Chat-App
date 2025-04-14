@@ -36,5 +36,4 @@ class CheckUserIsLogedIn extends AuthEvent {}
 
 class ClearLocalStorage extends AuthEvent {}
 
-
 class OnResetState extends AuthEvent {}

@@ -1,4 +1,4 @@
-import User from "../../models/user.model.js";
+import User from "../../../models/user.model.js";
 
 const sendFriendRequest =async (req,res)=>{
     const {recieverId} = req.body

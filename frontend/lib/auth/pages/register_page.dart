@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   void dispose() {
-    print('register disposed');
+    log('register disposed');
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -58,7 +59,7 @@ class _RegisterPageState extends State<RegisterPage> {
       ),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
-          print(state.runtimeType);
+          log(state.runtimeType.toString());
 
           //check state
           if (state is AuthLogedIn) {

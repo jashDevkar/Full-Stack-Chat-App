@@ -1,4 +1,4 @@
-import User from "../../models/user.model.js";
+import User from "../../../models/user.model.js";
 import jwt from 'jsonwebtoken';
 
 const getAllUsers = async (req, res) => {
@@ -9,20 +9,20 @@ const getAllUsers = async (req, res) => {
         const allUsers = await User.find({ _id: { $ne: userId } }).select("-password -__v ").lean();
 
         // console.log(allUsers);
-        
-        if(!allUsers){
+
+        if (!allUsers) {
             console.log('no users');
             return res.status(404).json({ message: "No user found" });
         }
 
-        
+
         const filteredUser = allUsers.map(item => {
 
             const friends = JSON.stringify(item.friends)
             const filteredFriends = JSON.parse(friends);
 
-            
-            
+
+
 
             if (filteredFriends.includes(userId)) {
                 item.status = 'Friends'
@@ -41,10 +41,10 @@ const getAllUsers = async (req, res) => {
             const filteredSentFriendRequests = JSON.parse(sentFriendRequests);
 
 
-            
+
 
             if (filteredSentFriendRequests.includes(userId)) {
-            
+
                 item.status = 'Accept'
                 return item
             }
@@ -64,7 +64,7 @@ const getAllUsers = async (req, res) => {
 
         res.status(200).json(filteredUser);
     } catch (error) {
-        return res.status(400).json({message:'Server error'});
+        return res.status(400).json({ message: 'Server error' });
     }
 }
 

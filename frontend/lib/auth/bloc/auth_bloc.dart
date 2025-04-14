@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/model/user_model.dart';
@@ -19,7 +21,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final box = Hive.box('myBox');
 
   AuthBloc() : super(AuthInitial()) {
-    on<AuthEvent>((event, emit) => emit(AuthLoading()));
+    on<AuthEvent>((event, emit) {
+      emit(AuthLoading());
+    });
 
     on<OnRegisterButtonPressed>(onRegisterButtonPressedCallback);
 
@@ -39,7 +43,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     try {
-      final http.StreamedResponse? result = await authService.registerUser(
+      final Response? result = await authService.registerUser(
         name: event.name,
         email: event.email,
         password: event.password,
@@ -47,8 +51,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
 
       if (result != null) {
-        final responseBody = await result.stream.bytesToString();
-        final Map<String, dynamic> response = json.decode(responseBody);
+        final Map<String, dynamic> response = result.data!;
 
         if (result.statusCode == 200) {
           //convert data into user model
@@ -63,7 +66,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(AuthFailure(errorMessage: response['message']));
       } else {
         emit(
-          AuthFailure(errorMessage: 'Registration failed. Please try again.'),
+          AuthFailure(
+            errorMessage: 'Registration failed. Please try again later.',
+          ),
         );
       }
     } on (Exception e,) {
@@ -108,7 +113,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         );
       }
     } catch (e) {
-      print(e);
+      log(e.toString());
       emit(
         AuthFailure(
           errorMessage: 'An error occurred during login. Please try again.',
@@ -121,16 +126,25 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     CheckUserIsLogedIn event,
     Emitter emit,
   ) async {
-
     final Map<dynamic, dynamic>? userData = box.get('userData');
     if (userData == null) {
+      // await Future.delayed(Duration(seconds: 3)).then((val) {
+      //   emit(AuthInitial());
+      // });
+
       emit(AuthInitial());
       return;
     }
 
     if (userData.isNotEmpty) {
-      emit(AuthLogedIn());
+      // await Future.delayed(Duration(seconds: 3)).then((val) {
+      //   _user = UserModel.fromMap(userData);
+      //   emit(AuthLogedIn());
+      //   return;
+      // });
+
       _user = UserModel.fromMap(userData);
+      emit(AuthLogedIn());
       return;
     }
     emit(AuthInitial());

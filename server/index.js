@@ -13,6 +13,7 @@ import { createServer } from 'node:http';
 import router from './src/routers/router.js';
 import chatRouter from './src/routers/chat/chat.router.js';
 import { Server } from 'socket.io';
+import { log } from 'node:console';
 
 dotenv.config();
 
@@ -25,6 +26,9 @@ const io = new Server(server, {
     },
 });
 
+
+const map = new Map();
+
 // === Socket.IO Logic ===
 io.on('connection', socket => {
     console.log('✅ New Socket Connected:', socket.id);
@@ -33,6 +37,14 @@ io.on('connection', socket => {
         console.log('📩 test_event received:', data);
         socket.emit('test_response', { message: 'Hello from server!' });
     });
+
+    socket.on('register_user',(data)=>{
+        // console.log('register user recieved',data);
+        
+        map.set(data.id,socket.id);
+        console.log(map.entries());
+        socket.emit('on_register_successfull',{'message':'User registered Successfully'});
+    })
 
     socket.on('disconnect', () => {
         console.log('❌ Socket Disconnected:', socket.id);

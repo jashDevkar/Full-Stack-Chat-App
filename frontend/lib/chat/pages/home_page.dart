@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/auth/bloc/auth_bloc.dart';
+import 'package:frontend/chat/pages/all_friends.dart';
 import 'package:frontend/chat/pages/notification_page.dart';
 import 'package:frontend/chat/widgets/user_list.dart';
 import 'package:frontend/core/widgets/loader.dart';
@@ -18,9 +19,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late UserModel _userModel;
-
   late ChatService chatService;
+
   List users = [];
+  bool loading = true;
 
   @override
   void initState() {
@@ -28,12 +30,11 @@ class _HomePageState extends State<HomePage> {
 
     chatService = ChatService(context);
     _userModel = BlocProvider.of<AuthBloc>(context).user;
-    fetchData();
-    print(_userModel.token);
+    fetchAllUsers();
+    // log(_userModel.token);
   }
 
-  bool loading = true;
-  Future<void> fetchData() async {
+  Future<void> fetchAllUsers() async {
     setState(() {
       loading = true;
     });
@@ -41,7 +42,6 @@ class _HomePageState extends State<HomePage> {
     List fetchedUsers = await chatService.fetchAllUsers(
       userToken: _userModel.token,
     );
-
 
     fetchedUsers =
         fetchedUsers.where((item) => item['status'] != 'Accept').toList();
@@ -68,17 +68,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              icon: Icon(Icons.menu),
-            );
-          },
-        ),
-
         actions: [
           IconButton(
             onPressed: () {
@@ -93,8 +82,19 @@ class _HomePageState extends State<HomePage> {
             icon: Icon(Icons.notifications, color: Colors.white),
           ),
           IconButton(
-            icon: Icon(Icons.group, color: Colors.white),
-            onPressed: () {},
+            icon: Icon(Icons.chat_rounded, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                PageTransition(
+                  type: PageTransitionType.rightToLeft,
+                  child: AllFriends(
+                    chatService: chatService,
+                    userModel: _userModel,
+                  ),
+                ),
+              );
+            },
           ),
         ],
         title: Text(
@@ -128,9 +128,7 @@ class _HomePageState extends State<HomePage> {
               trailing: Icon(Icons.logout),
               title: const Text('Logout'),
               onTap: () {
-                // print('object');
                 showAlert(context);
-                // BlocProvider.of<AuthBloc>(context).add(OnLogoutButtonPressed());
               },
             ),
           ],
@@ -144,7 +142,7 @@ class _HomePageState extends State<HomePage> {
               ? const Loader()
               : RefreshIndicator(
                 onRefresh: () async {
-                  fetchData();
+                  fetchAllUsers();
                 },
                 child:
                     users.isEmpty
@@ -154,7 +152,7 @@ class _HomePageState extends State<HomePage> {
                             children: [
                               Text('No users found'),
                               TextButton(
-                                onPressed: fetchData,
+                                onPressed: fetchAllUsers,
                                 child: Text('Refresh'),
                               ),
                             ],
@@ -169,7 +167,6 @@ class _HomePageState extends State<HomePage> {
                               onPressCallback: () {
                                 if (user['status'] == 'Pending' ||
                                     user['status'] == 'Friends') {
-                                
                                   return;
                                 }
 

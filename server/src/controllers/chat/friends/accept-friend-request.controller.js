@@ -1,4 +1,4 @@
-import User from "../../models/user.model.js";
+import User from "../../../models/user.model.js";
 
 const acceptFriendRequest = async (req, res) => {
   try {

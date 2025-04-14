@@ -1,5 +1,5 @@
 import path from "path";
-import User from "../../models/user.model.js";
+import User from "../../../models/user.model.js";
 
 const getAllFriends = async (req, res) => {
     try {

@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,17 @@ import 'package:http/http.dart' as http;
 class ChatService {
   final BuildContext context;
   ChatService(this.context);
+
+  ///stream controllers
   final StreamController notificationUsers = StreamController();
+
+  // static ChatService? _instance;
+
+  // ChatService._privateConstructor(this.context);
+
+  // factory ChatService(context) {
+  //   return _instance ??= ChatService._privateConstructor(context);
+  // }
 
   Future<List> fetchAllUsers({String? userToken}) async {
     try {
@@ -26,7 +37,7 @@ class ChatService {
       final data = jsonDecode(response.body);
       return data;
     } catch (e) {
-      print(e);
+      log(e.toString());
       return [];
     }
   }
@@ -58,7 +69,7 @@ class ChatService {
     }
   }
 
-  Future<List> fetchAllFriends({String? userToken}) async {
+  Future<List> fetchAllFriendRequest({String? userToken}) async {
     try {
       final url = Uri.parse("${Constants.url}/chat/all-friend-requests/");
 
@@ -74,7 +85,7 @@ class ChatService {
       // print(data);
       return data;
     } catch (e) {
-      print(e);
+      log(e.toString());
       return [];
     }
   }
@@ -105,5 +116,33 @@ class ChatService {
     } catch (e) {
       messenger.showSnackBar(SnackBar(content: Text('Server error')));
     }
+  }
+
+  Future<List> fetchAllFriends({required String userToken}) async {
+    try {
+      final url = Uri.parse("${Constants.url}/chat/get-all-friends/");
+
+      final http.Response response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': userToken,
+        },
+      );
+
+      final data = jsonDecode(response.body);
+      if (data != null) {
+        return data['friends'];
+      }
+
+      return [];
+    } catch (e) {
+      log(e.toString());
+      return [];
+    }
+  }
+
+  Future<List> getAllChats() async {
+    return [];
   }
 }

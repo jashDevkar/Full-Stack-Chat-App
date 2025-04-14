@@ -1,4 +1,4 @@
-import User from '../../models/user.model.js'
+import User from '../../../models/user.model.js'
 const allFriendRequests = async(req,res)=>{
     const userId = req.userId
 

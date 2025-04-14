@@ -1,62 +1,54 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
+
+import 'package:dio/dio.dart';
 
 import 'package:frontend/core/constants.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
-import 'package:mime/mime.dart';
 
 class AuthService {
-  Future<http.StreamedResponse?> registerUser({
+  ///register
+  Future<Response?> registerUser({
     required File image,
     required String name,
     required String email,
     required String password,
   }) async {
+    late Response response;
+
     try {
-      final url = Uri.parse("${Constants.url}/register");
+      final Dio dio = Dio();
 
-      var request = http.MultipartRequest("POST", url);
-
-      request.fields['name'] = name;
-      request.fields['email'] = email;
-      request.fields['password'] = password;
-
-      // var _fileName = basename(image.path);
-
-      var mimeType = lookupMimeType(image.path) ?? "application/octet-stream";
-
-      // print(image.path);
-
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          "image", // This is the key name in Express
-          image.path,
-          contentType: MediaType.parse(mimeType),
-        ),
+      MultipartFile multipartImage = await MultipartFile.fromFile(
+        image.path,
+        filename: "image",
+        contentType: MediaType('image', 'jpeg'), // optional
       );
 
-      final response = await request.send();
-
-      // final response = await http.post(
-      //   url,
-      //   body: jsonEncode({
-      //     'name': name,
-      //     'email': email,
-      //     'password': password,
-      //     'imageUrl':
-      //         "https://yt3.ggpht.com/yti/ANjgQV-ouSo8nKvQ8z1g318n06gKuEP5I-m5K5hYa1Te_fwck9A=s88-c-k-c0x00ffffff-no-rj",
-      //   }),
-      //   headers: {'Content-Type': 'application/json'},
-      // );
+      FormData formData = FormData.fromMap({
+        "image": multipartImage,
+        "name": name,
+        "email": email,
+        "password": password,
+      });
+      response = await dio.post(
+        "${Constants.url}/register",
+        data: formData,
+        options: Options(headers: {"Content-Type": "multipart/form-data"}),
+      );
 
       return response;
-    } catch (e) {
-      print(e);
+    } on DioException catch (e) {
+      if (e.response?.data != null) {
+        return response = e.response!;
+      }
       return null;
     }
   }
 
+  ///login
   Future loginUser({required String email, required String password}) async {
     try {
       final url = Uri.parse("${Constants.url}/login");
@@ -67,12 +59,10 @@ class AuthService {
         headers: {'Content-Type': 'application/json'},
       );
 
-     
-
       return response;
     } catch (e) {
-      // print('error idr is pakda');
-      print(e);
+
+      log(e.toString());
     }
   }
 }

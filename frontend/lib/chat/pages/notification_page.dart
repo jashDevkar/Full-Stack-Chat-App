@@ -35,7 +35,7 @@ class _NotificationPageState extends State<NotificationPage> {
     setState(() {
       loading = true;
     });
-    final fetchedResponse = await chatService.fetchAllFriends(
+    final fetchedResponse = await chatService.fetchAllFriendRequest(
       userToken: _userModel.token,
     );
 

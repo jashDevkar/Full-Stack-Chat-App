@@ -2,20 +2,13 @@ import mongoose from "mongoose";
 
 
 const messageSchema = mongoose.Schema({
-    senderId:{
-        type:mongoose.Types.ObjectId,
-        ref:"User"
-    },
-    recepientId:{
-        type:mongoose.Types.ObjectId,
-        ref:"User"
-    },
-    messageType:{
+    senderEmail:{
         type:String,
-        enum:['text','image']
+    },
+    recieverEmail:{
+        type:String,
     },
     message:String,
-    imageUrl:String,
     timeStamp:{
         type:Date,
         default:Date.now,
