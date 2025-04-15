@@ -1,20 +1,29 @@
-import 'dart:async';
 import 'dart:developer';
 
 import 'package:frontend/services/chat/chat_service.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 
 class Socket {
   final ChatService chatService;
   late socket_io.Socket socket;
 
-  final StreamController chats = StreamController.broadcast();
+  final BehaviorSubject<List<Map<String, dynamic>>> chatList =
+      BehaviorSubject.seeded([]);
 
-  Socket({required this.chatService});
+  final String userToken;
 
-  void initSocketConnection(final String id) {
+  final String userEmail;
+
+  Socket({
+    required this.chatService,
+    required this.userToken,
+    required this.userEmail,
+  });
+
+  void initSocketConnection() {
     socket = socket_io.io(
-      'http://192.168.0.106:8000/',
+      'http://192.168.0.106:8000',
       socket_io.OptionBuilder()
           .setTransports(['websocket'])
           .disableAutoConnect()
@@ -26,30 +35,43 @@ class Socket {
     socket.onConnect((_) {
       log('✅ Connected to Socket Server');
 
+      socket.emit('register_user', {'email': userEmail});
       socket.on('on_register_successfull', (data) => log(data['message']));
-    });
 
-    socket.emit('register_user', {'id': id});
+      socket.on('message_response', (data) {
+        final chat = chatList.value;
+        final List<Map<String, dynamic>> updatedChat = [...chat, data];
+        chatList.add(updatedChat);
+      });
+    });
 
     socket.onDisconnect((_) => log('❌ Disconnected'));
   }
 
-  void getChatsFromServer() async {
-    final data  = await chatService.getAllChats();
+  void sendMessage({required String recieverEmail, required String message}) {
+    final Map<String, dynamic> data = {
+      'senderEmail': userEmail,
+      'recieverEmail': recieverEmail,
+      'message': message,
+    };
+    socket.emit('send_message', data);
+  }
+
+  void getChatsFromServer({required String recieverEmail}) async {
+    final data = await chatService.getAllChats(
+      userToken: userToken,
+      recieverEmail: recieverEmail,
+    );
+
+    final List<Map<String, dynamic>> chats = [...data];
+    chatList.add(chats);
   }
 
   void disconnectSocket() {
     socket.disconnect();
-    chats.close();
+    chatList.close();
     socket.dispose();
   }
 
-  // void sendMessage() {
-  //   String RecievedData;
-  //   log('sending message');
-  //   socket.emit('test_event', {'message': 'hello from flutter'});
-  //   socket.on('test_response', (data) {
-  //     RecievedData = data;
-  //   });
-  // }
+
 }

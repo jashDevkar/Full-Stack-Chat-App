@@ -5,6 +5,7 @@ import allFriendRequests from '../../controllers/chat/friends/all-friend-request
 import acceptFriendRequest from '../../controllers/chat/friends/accept-friend-request.controller.js';
 import getAllFriends from '../../controllers/chat/friends/get-all-friends.controller.js';
 import allChats from '../../controllers/chat/messages/all-chats.controller.js';
+import sendMessage from '../../controllers/chat/messages/send-message.controller.js'
 
 
 const chatRouter = express.Router();
@@ -16,6 +17,7 @@ chatRouter.get("/chat/get-all-friends",verifyUser,getAllFriends)
 
 
 chatRouter.get('/chat/messages/:email',verifyUser,allChats)
+chatRouter.post('/chat/send-message/',sendMessage)
 
 
 

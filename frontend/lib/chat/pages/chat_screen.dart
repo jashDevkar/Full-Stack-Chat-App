@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/auth/bloc/auth_bloc.dart';
 import 'package:frontend/core/socket/socket.dart';
+import 'package:frontend/core/widgets/loader.dart';
 import 'package:frontend/services/chat/chat_service.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -28,8 +31,14 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    socket = Socket(chatService: widget.chatService);
-    socket.initSocketConnection(BlocProvider.of<AuthBloc>(context).user.token);
+
+    socket = Socket(
+      chatService: widget.chatService,
+      userToken: BlocProvider.of<AuthBloc>(context).user.token,
+      userEmail: BlocProvider.of<AuthBloc>(context).user.email,
+    );
+    socket.initSocketConnection();
+    socket.getChatsFromServer(recieverEmail: widget.friend['email']);
   }
 
   @override
@@ -52,9 +61,17 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: StreamBuilder(
-              stream: socket.chats.stream,
+              stream: socket.chatList.stream,
               builder: (context, snapshot) {
-                return Text('hello');
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Loader();
+                } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  return Center(child: Text('${snapshot.data}'));
+                } else if (snapshot.data!.isEmpty) {
+                  return Center(child: Text('Start conversation'));
+                }
+
+                return Container();
               },
             ),
           ),
@@ -77,7 +94,16 @@ class _ChatScreenState extends State<ChatScreen> {
                 ),
                 Container(
                   decoration: BoxDecoration(),
-                  child: GestureDetector(child: Icon(Icons.send)),
+                  child: GestureDetector(
+                    onTap: () {
+                      socket.sendMessage(
+                        recieverEmail: widget.friend['email'],
+                        message: _controller.text,
+                      );
+                      _controller.clear();
+                    },
+                    child: Icon(Icons.send),
+                  ),
                 ),
               ],
             ),

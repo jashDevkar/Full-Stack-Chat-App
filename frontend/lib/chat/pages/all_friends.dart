@@ -50,15 +50,7 @@ class _AllFriendsState extends State<AllFriends> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () {
-              // socket.sendMessage();
-            },
-            icon: Icon(Icons.send),
-          ),
-        ],
-        title: const Text(
+         title: const Text(
           "Friends",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),

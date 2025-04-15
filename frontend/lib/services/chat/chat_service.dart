@@ -142,7 +142,30 @@ class ChatService {
     }
   }
 
-  Future<List> getAllChats() async {
-    return [];
+  Future<List> getAllChats({
+    required String userToken,
+    required String recieverEmail,
+  }) async {
+    try {
+      final url = Uri.parse("${Constants.url}/chat/messages/$recieverEmail");
+
+      final http.Response response = await http.get(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': userToken,
+        },
+      );
+
+      final data = jsonDecode(response.body);
+      if (data != null) {
+        return data;
+      }
+
+      return [];
+    } catch (e) {
+      log(e.toString());
+      return [];
+    }
   }
 }

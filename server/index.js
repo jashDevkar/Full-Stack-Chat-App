@@ -15,6 +15,7 @@ import chatRouter from './src/routers/chat/chat.router.js';
 import { Server } from 'socket.io';
 import { log } from 'node:console';
 
+
 dotenv.config();
 
 const app = express();
@@ -39,14 +40,43 @@ io.on('connection', socket => {
     });
 
     socket.on('register_user',(data)=>{
-        // console.log('register user recieved',data);
-        
-        map.set(data.id,socket.id);
+        console.log('✅ user registered')
+        map.set(data.email,socket.id);
         console.log(map.entries());
         socket.emit('on_register_successfull',{'message':'User registered Successfully'});
     })
 
+
+    socket.on('send_message',data=>{
+        const message = new Message({
+            senderEmail:data.senderEmail,
+            recieverEmail:data.recieverEmail,
+            message:data.message
+        });
+        message.save();
+        const user1 = map.get(data.senderEmail);
+        const user2 = map.get(data.recieverEmail);
+
+        
+  
+        if(user1){
+
+            io.to(user1).emit('message_response',message);
+        }
+        if(user2){
+            io.to(user2).emit('message_response',message);
+        }
+    })
+
     socket.on('disconnect', () => {
+
+    for (const [key,value] of map) {
+        if(value == socket.id){
+            map.delete(key);
+            console.log('❌ key deleted');
+            break;
+        }
+    }
         console.log('❌ Socket Disconnected:', socket.id);
     });
 });

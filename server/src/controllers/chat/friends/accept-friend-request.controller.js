@@ -4,7 +4,7 @@ const acceptFriendRequest = async (req, res) => {
   try {
     const userId = req.userId;
     const { recieverId } = req.body
-    // console.log(recieverId);
+
 
     const user = await User.findByIdAndUpdate(userId, {
       $pull: { friendRequests: recieverId },
@@ -22,7 +22,6 @@ const acceptFriendRequest = async (req, res) => {
     }).select('friends sentFriendRequests friendRequests');
 
 
-    console.log(user,recieverUser);
 
     return res.status(200).json({ user: user, reciever: recieverUser });
   } catch (error) {

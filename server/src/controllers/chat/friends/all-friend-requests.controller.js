@@ -15,8 +15,7 @@ const allFriendRequests = async(req,res)=>{
         delete item['__v']
         return item
     })
-    
-    // console.log(filteredFriendRequest);
+
     
 
 

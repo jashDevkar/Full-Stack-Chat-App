@@ -15,7 +15,7 @@ import verifyUser from '../middleware/verifyUser.js';
 
 const testController = async(req,res)=>{
     try{
-        // console.log(req.file);
+        console.log("file path of image",req.file);
         const response = await uploadOnCloudinary(req.file.path);
         if(!response) return res.status(400).json({message: "Failed to upload image"});
         res.json({message: "Image uploaded successfully"});

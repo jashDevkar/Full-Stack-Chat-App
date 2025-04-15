@@ -11,7 +11,6 @@ const getAllUsers = async (req, res) => {
         // console.log(allUsers);
 
         if (!allUsers) {
-            console.log('no users');
             return res.status(404).json({ message: "No user found" });
         }
 

@@ -48,9 +48,9 @@ const register = async (req, res) => {
 
     }
 
-    finally {
-        fs.unlinkSync(filePath);
-    }
+    // finally {
+    //     fs.unlinkSync(filePath);
+    // }
 }
 
 
