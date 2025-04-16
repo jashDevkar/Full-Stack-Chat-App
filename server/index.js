@@ -32,7 +32,8 @@ const map = new Map();
 
 // === Socket.IO Logic ===
 io.on('connection', socket => {
-    console.log('✅ New Socket Connected:', socket.id);
+    try{
+        console.log('✅ New Socket Connected:', socket.id);
 
     socket.on('test_event', (data) => {
         console.log('📩 test_event received:', data);
@@ -73,12 +74,15 @@ io.on('connection', socket => {
     for (const [key,value] of map) {
         if(value == socket.id){
             map.delete(key);
-            console.log('❌ key deleted');
+            console.log('🗑️ key deleted');
             break;
         }
     }
         console.log('❌ Socket Disconnected:', socket.id);
     });
+    }catch(e){
+        console.log(e)
+    }
 });
 
 

@@ -1,6 +1,8 @@
 // import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:frontend/chat/bloc/chat_bloc.dart';
 import 'package:frontend/chat/pages/chat_screen.dart';
 import 'package:frontend/chat/widgets/chat_user_list.dart';
 import 'package:frontend/core/widgets/loader.dart';
@@ -23,26 +25,35 @@ class AllFriends extends StatefulWidget {
 
 class _AllFriendsState extends State<AllFriends> {
   bool loading = true;
-  List friendList = [];
+  // List friendList = [];
+
+  late final ChatBloc provider;
 
   @override
   void initState() {
     super.initState();
-    fetchAllFriends();
+    provider = BlocProvider.of<ChatBloc>(context);
+    if (provider.allFriends.isEmpty) {
+      fetchAllFriends();
+    } else {
+      loading = false;
+    }
   }
 
   void fetchAllFriends() async {
     List fetchData = await widget.chatService.fetchAllFriends(
       userToken: widget.userModel.token,
     );
+
+    provider.allFriends = [...fetchData];
     setState(() {
-      friendList = fetchData;
       loading = false;
     });
   }
 
   @override
   void dispose() {
+    
     super.dispose();
   }
 
@@ -50,12 +61,18 @@ class _AllFriendsState extends State<AllFriends> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-         title: const Text(
+        title: const Text(
           "Friends",
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
-        elevation: 2.0,
       ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     print(
+      //       'daaaaattaaaa ${BlocProvider.of<ChatBloc>(context).allFriends}',
+      //     );
+      //   },
+      // ),
       body:
           loading
               ? const Loader()
@@ -64,7 +81,7 @@ class _AllFriendsState extends State<AllFriends> {
                   fetchAllFriends();
                 },
                 child:
-                    friendList.isEmpty
+                    provider.allFriends.isEmpty
                         ? Center(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -78,17 +95,17 @@ class _AllFriendsState extends State<AllFriends> {
                           ),
                         )
                         : ListView.builder(
-                          itemCount: friendList.length,
+                          itemCount: provider.allFriends.length,
                           itemBuilder: (context, index) {
                             final Map<String, dynamic> friend =
-                                friendList[index];
+                                provider.allFriends[index];
                             return ChatUserList(
                               friend: friend,
                               onPressCallback: () {
                                 Navigator.push(
                                   context,
                                   PageTransition(
-                                    type: PageTransitionType.bottomToTop,
+                                    type: PageTransitionType.rightToLeft,
                                     child: ChatScreen(
                                       friend: friend,
                                       chatService: widget.chatService,
