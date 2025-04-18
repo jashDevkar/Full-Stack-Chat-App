@@ -10,7 +10,7 @@ class ChatUserList extends StatelessWidget {
     return InkWell(
       onTap: onPressCallback,
       child: Container(
-        padding: EdgeInsets.only(left: 10, right: 10.0, bottom: 10.0),
+        padding: EdgeInsets.only(left: 10),
         margin: EdgeInsets.only(top: 10.0),
         child: Row(
           spacing: 15.0,

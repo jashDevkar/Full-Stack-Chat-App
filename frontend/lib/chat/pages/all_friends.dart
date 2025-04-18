@@ -53,70 +53,53 @@ class _AllFriendsState extends State<AllFriends> {
 
   @override
   void dispose() {
-    
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Friends",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-        ),
-      ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     print(
-      //       'daaaaattaaaa ${BlocProvider.of<ChatBloc>(context).allFriends}',
-      //     );
-      //   },
-      // ),
-      body:
-          loading
-              ? const Loader()
-              : RefreshIndicator(
-                onRefresh: () async {
-                  fetchAllFriends();
-                },
-                child:
-                    provider.allFriends.isEmpty
-                        ? Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text('No users found'),
-                              TextButton(
-                                onPressed: fetchAllFriends,
-                                child: Text('Refresh'),
-                              ),
-                            ],
-                          ),
-                        )
-                        : ListView.builder(
-                          itemCount: provider.allFriends.length,
-                          itemBuilder: (context, index) {
-                            final Map<String, dynamic> friend =
-                                provider.allFriends[index];
-                            return ChatUserList(
-                              friend: friend,
-                              onPressCallback: () {
-                                Navigator.push(
-                                  context,
-                                  PageTransition(
-                                    type: PageTransitionType.rightToLeft,
-                                    child: ChatScreen(
-                                      friend: friend,
-                                      chatService: widget.chatService,
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
+    return loading
+        ? const Loader()
+        : RefreshIndicator(
+          onRefresh: () async {
+            fetchAllFriends();
+          },
+          child:
+              provider.allFriends.isEmpty
+                  ? Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text('No users found'),
+                        TextButton(
+                          onPressed: fetchAllFriends,
+                          child: Text('Refresh'),
                         ),
-              ),
-    );
+                      ],
+                    ),
+                  )
+                  : ListView.builder(
+                    itemCount: provider.allFriends.length,
+                    itemBuilder: (context, index) {
+                      final Map<String, dynamic> friend =
+                          provider.allFriends[index];
+                      return ChatUserList(
+                        friend: friend,
+                        onPressCallback: () {
+                          Navigator.push(
+                            context,
+                            PageTransition(
+                              type: PageTransitionType.rightToLeft,
+                              child: ChatScreen(
+                                friend: friend,
+                                chatService: widget.chatService,
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+        );
   }
 }

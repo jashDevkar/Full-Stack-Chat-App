@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/auth/bloc/auth_bloc.dart';
+import 'package:frontend/chat/bloc/chat_bloc.dart';
 
 void showAlert(BuildContext context) {
   showDialog(
@@ -41,6 +42,7 @@ void showAlert(BuildContext context) {
             ),
             onPressed: () {
               Navigator.pop(context);
+              BlocProvider.of<ChatBloc>(context).add(EmptyAllFields());
               BlocProvider.of<AuthBloc>(context).add(OnLogoutButtonPressed());
             },
             child: Text('Logout'),

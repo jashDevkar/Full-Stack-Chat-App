@@ -1,7 +1,7 @@
-import 'dart:developer';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:frontend/auth/bloc/auth_bloc.dart';
 import 'package:frontend/chat/widgets/chat_tile.dart';
 import 'package:frontend/core/socket/socket.dart';
@@ -27,7 +27,8 @@ class _ChatScreenState extends State<ChatScreen> {
   late Socket socket;
 
   bool loading = true;
-  List allFriends = [];
+
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -40,15 +41,32 @@ class _ChatScreenState extends State<ChatScreen> {
     );
     socket.initSocketConnection();
     socket.getChatsFromServer(recieverEmail: widget.friend['email']);
+
+    KeyboardVisibilityController().onChange.listen((isVisible) {
+      if (isVisible) {
+        Future.delayed(Duration(milliseconds: 300), () {
+          scrollToEnd();
+        });
+      }
+    });
+  }
+
+  scrollToEnd() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   @override
   void dispose() {
+    _scrollController.dispose();
     socket.disconnectSocket();
     super.dispose();
   }
-
-  bool isFirstSnapshot = true;
 
   @override
   Widget build(BuildContext context) {
@@ -67,15 +85,20 @@ class _ChatScreenState extends State<ChatScreen> {
             child: StreamBuilder(
               stream: socket.chatList.stream,
               builder: (context, snapshot) {
-                log(
-                  (snapshot.connectionState == ConnectionState.waiting)
-                      .toString(),
-                );
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  isFirstSnapshot = false;
                   return const Loader();
                 } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  ///if ui is rendered than this will run
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (_scrollController.hasClients) {
+                      ///check if scroll controller is attached to the listview
+                      Future.delayed(Duration(milliseconds: 300), () {
+                        scrollToEnd();
+                      });
+                    }
+                  });
                   return ListView.builder(
+                    controller: _scrollController,
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       final Map<String, dynamic> chat = snapshot.data![index];
@@ -144,6 +167,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       message: _controller.text,
                     );
                     _controller.clear();
+                    Future.delayed(Duration(milliseconds: 100), scrollToEnd);
                   },
 
                   icon: Icon(Icons.send),

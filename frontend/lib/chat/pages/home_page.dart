@@ -3,9 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:frontend/auth/bloc/auth_bloc.dart';
 import 'package:frontend/chat/pages/all_friends.dart';
 import 'package:frontend/chat/pages/all_users.dart';
+import 'package:frontend/chat/pages/notification_page.dart';
 import 'package:frontend/core/widgets/show_alert.dart';
 import 'package:frontend/model/user_model.dart';
 import 'package:frontend/services/chat/chat_service.dart';
+import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:page_transition/page_transition.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -31,8 +34,12 @@ class _HomePageState extends State<HomePage> {
     _userModel = BlocProvider.of<AuthBloc>(context).user;
 
     pages = [
-      AllUsers(),
-      AllFriends(chatService: chatService, userModel: _userModel),
+      {'page': AllUsers(), 'title': 'swift chat', 'leading': true},
+      {
+        'page': AllFriends(chatService: chatService, userModel: _userModel),
+        'title': 'Friends',
+        'leading': false,
+      },
     ];
     // log(_userModel.token);
   }
@@ -64,7 +71,33 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          pages[_currentIndex]['title'],
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        ),
+        actions:
+            pages[_currentIndex]['leading']
+                ? [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        PageTransition(
+                          type: PageTransitionType.rightToLeft,
+                          child: NotificationPage(),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.notifications, color: Colors.white),
+                  ),
+                ]
+                : null,
+      ),
+
       drawer: Drawer(
+        elevation: double.infinity,
+
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -94,30 +127,35 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: Colors.deepPurpleAccent,
-        currentIndex: _currentIndex,
-        onTap: _onItemTapped,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.group), label: 'Users'),
-          BottomNavigationBarItem(icon: Icon(Icons.inbox), label: 'Chat'),
-        ],
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(),
+        padding: EdgeInsets.symmetric(vertical: 10.0),
+        child: GNav(
+          selectedIndex: _currentIndex,
+          onTabChange: _onItemTapped,
+          rippleColor:
+              Colors.grey.shade800, // tab button ripple color when pressed
+          hoverColor: Colors.grey.shade700, // tab button hover color
+          haptic: true,
+          tabBorderRadius: 30,
+          tabActiveBorder: Border.all(color: Colors.grey, width: 1),
+          curve: Curves.easeInOut,
+          duration: Duration(milliseconds: 900),
+          gap: 24,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          color: Colors.grey[800],
+          activeColor: Colors.white,
+          padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 16.0),
+          tabs: [
+            GButton(icon: Icons.people_alt, text: 'Users'),
+            GButton(icon: Icons.inbox, text: 'Chats'),
+          ],
+        ),
       ),
 
       ///check is data is present else show a 'no user found text'
       ///every time on refresh show a
-      body: pages[_currentIndex],
+      body: pages[_currentIndex]['page'],
     );
   }
 }
-
-
-
-// PageView(
-//         controller: _pageController,
-//         onPageChanged: _onPageChanged,
-//         children: [
-//           AllUsers(),
-//           AllFriends(chatService: chatService, userModel: _userModel),
-//         ],
-//       ),
