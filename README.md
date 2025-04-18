@@ -135,7 +135,7 @@ node server.js
 
 ### Create `.env` File in Backend Root
 
-Create a `.env` file in your `backend/` folder and add the following:
+Create a `.env` file in your `server/` folder and add the following:
 
 ```env
 PORT=<your_port_here>
