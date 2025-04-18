@@ -13,7 +13,7 @@ A sleek and modern **one-on-one real-time chat application** built using **Flutt
 - 👥 View All Users & All Friends
 - 📩 Send & Receive Friend Requests
 - 🔔 Notification Panel for Friend Requests
-- 🢑 Real-time One-on-One Chat using Socket.IO
+- 🔥 Real-time One-on-One Chat using Socket.IO
 - 🎯 Stream-based chat updates using StreamController
 - 📅 Smart UI that shows "Start Conversation" when there are no chats
 - 📱 Keyboard-aware smooth scrolling to latest messages
@@ -25,15 +25,16 @@ A sleek and modern **one-on-one real-time chat application** built using **Flutt
 
 ## 📸 Screenshots
 
-> *Add your own screenshots here to showcase the UI*
-
 | Sign Up Screen | Login Screen | All Users |
 | -------------- | ------------ | --------- |
-|                |              |           |
+| ![](frontend/assets/app/1.jpeg) | ![](frontend/assets/app/2.jpeg) | ![](frontend/assets/app/3.jpeg) |
 
-| All Friends | Notifications | Chat Screen |
-| ----------- | ------------- | ----------- |
-|             |               |             |
+| All Friends | Logout Drawer | Empty Chat Screen |  Chat Screen |
+| ----------- | ------------- | ----------- | ------------ |
+| ![](frontend/assets/app/4.jpeg) | ![](frontend/assets/app/7.jpeg) | ![](frontend/assets/app/5.jpeg) | ![](frontend/assets/app/6.jpeg) |
+
+
+
 
 ---
 
@@ -132,6 +133,20 @@ node server.js
 # or use nodemon
 ```
 
+### Create `.env` File in Backend Root
+
+Create a `.env` file in your `server/` folder and add the following:
+
+```env
+PORT=<your_port_here>
+MONGOOSE_URL=<your_mongodb_url_here>
+
+CLOUDINARY_NAME=<your_cloudinary_name>
+CLOUDINARY_API_KEY=<your_cloudinary_api_key>
+CLOUDINARY_SECRET=<your_secret_here>
+```
+
+
 ### 📱 Flutter App
 
 ```bash
@@ -150,11 +165,8 @@ flutter run
 ## 💖 Credits
 
 Made with ❤️ using Flutter & Express.\
-Special thanks to all contributors and open-source packages used in this project.
-
+Peace out -
 ---
 
-## 📄 License
 
-This project is open-sourced under the MIT License.
 
