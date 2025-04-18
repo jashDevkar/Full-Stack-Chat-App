@@ -31,9 +31,9 @@ A sleek and modern **one-on-one real-time chat application** built using **Flutt
 | -------------- | ------------ | --------- |
 | ![](frontend/assets/app/1.jpeg) | ![](frontend/assets/app/2.jpeg) | ![](frontend/assets/app/3.jpeg) |
 
-| All Friends | Notifications | Chat Screen |
-| ----------- | ------------- | ----------- |
-| ![](frontend/assets/app/all_friends.png) | ![](frontend/assets/app/notifications.png) | ![](frontend/assets/app/chat_screen.png) |
+| All Friends | Logout Drawer | Empty Chat Screen | Chat Screen |
+| ----------- | ------------- | ----------- | ------------ |
+| ![](frontend/assets/app/4.jpeg) | ![](frontend/assets/app/7.jpeg) | ![](frontend/assets/app/5.jpeg) | ![](frontend/assets/app/6.jpeg) |
 
 ---
 
