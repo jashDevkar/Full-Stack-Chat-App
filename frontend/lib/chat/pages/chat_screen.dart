@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -162,6 +163,10 @@ class _ChatScreenState extends State<ChatScreen> {
                   ),
                   focusColor: Colors.deepPurple,
                   onPressed: () {
+                    if (_controller.text.trim().isEmpty) {
+                      _controller.clear();
+                      return;
+                    }
                     socket.sendMessage(
                       recieverEmail: widget.friend['email'],
                       message: _controller.text,
