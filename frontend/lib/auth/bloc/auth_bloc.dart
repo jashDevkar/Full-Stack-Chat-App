@@ -22,7 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc() : super(AuthInitial()) {
     on<AuthEvent>((event, emit) {
-      emit(AuthInitial());
+      emit(AuthLoading());
     });
 
     on<OnRegisterButtonPressed>(onRegisterButtonPressedCallback);

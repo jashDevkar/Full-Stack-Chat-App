@@ -6,6 +6,7 @@ import 'package:frontend/chat/bloc/chat_bloc.dart';
 import 'package:frontend/core/theme.dart';
 import 'package:frontend/chat/pages/home_page.dart';
 
+
 import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
@@ -33,9 +34,6 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          // if (state is AuthInitialLoading) {
-          //   return const InitialPage();
-          // }
           if (state is AuthLogedIn) {
             return const HomePage();
           } else {
