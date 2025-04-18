@@ -29,11 +29,11 @@ A sleek and modern **one-on-one real-time chat application** built using **Flutt
 
 | Sign Up Screen | Login Screen | All Users |
 | -------------- | ------------ | --------- |
-|                |              |           |
+| ![](frontend/assets/app/1.jpeg) | ![](frontend/assets/app/2.jpeg) | ![](frontend/assets/app/3.jpeg) |
 
 | All Friends | Notifications | Chat Screen |
 | ----------- | ------------- | ----------- |
-|             |               |             |
+| ![](frontend/assets/app/all_friends.png) | ![](frontend/assets/app/notifications.png) | ![](frontend/assets/app/chat_screen.png) |
 
 ---
 
