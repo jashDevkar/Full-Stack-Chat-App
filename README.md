@@ -25,8 +25,6 @@ A sleek and modern **one-on-one real-time chat application** built using **Flutt
 
 ## 📸 Screenshots
 
-> *Add your own screenshots here to showcase the UI*
-
 | Sign Up Screen | Login Screen | All Users |
 | -------------- | ------------ | --------- |
 | ![](frontend/assets/app/1.jpeg) | ![](frontend/assets/app/2.jpeg) | ![](frontend/assets/app/3.jpeg) |
@@ -135,6 +133,21 @@ node server.js
 # or use nodemon
 ```
 
+### Create `.env` File in Backend Root
+
+Create a `.env` file in your `backend/` folder and add the following:
+
+```env
+PORT=<your_port_here>
+MONGOOSE_URL=<your_mongodb_url_here>
+
+CLOUDINARY_NAME=<your_cloudinary_name>
+CLOUDINARY_API_KEY=<your_cloudinary_api_key>
+CLOUDINARY_SECRET=<your_secret_here>
+```
+
+> ⚠️ Never commit your actual secrets or API keys to GitHub. Use environment variables securely.
+
 ### 📱 Flutter App
 
 ```bash
@@ -157,7 +170,5 @@ Special thanks to all contributors and open-source packages used in this project
 
 ---
 
-## 📄 License
 
-This project is open-sourced under the MIT License.
 
