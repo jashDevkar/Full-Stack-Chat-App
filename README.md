@@ -13,7 +13,7 @@ A sleek and modern **one-on-one real-time chat application** built using **Flutt
 - 👥 View All Users & All Friends
 - 📩 Send & Receive Friend Requests
 - 🔔 Notification Panel for Friend Requests
-- 🢑 Real-time One-on-One Chat using Socket.IO
+- 🔥 Real-time One-on-One Chat using Socket.IO
 - 🎯 Stream-based chat updates using StreamController
 - 📅 Smart UI that shows "Start Conversation" when there are no chats
 - 📱 Keyboard-aware smooth scrolling to latest messages
@@ -146,7 +146,6 @@ CLOUDINARY_API_KEY=<your_cloudinary_api_key>
 CLOUDINARY_SECRET=<your_secret_here>
 ```
 
-> ⚠️ Never commit your actual secrets or API keys to GitHub. Use environment variables securely.
 
 ### 📱 Flutter App
 
@@ -166,8 +165,7 @@ flutter run
 ## 💖 Credits
 
 Made with ❤️ using Flutter & Express.\
-Special thanks to all contributors and open-source packages used in this project.
-
+Peace out -
 ---
 
 
