@@ -71,11 +71,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           ),
         );
       }
-    } on (Exception e,) {
+    }catch(e){
       emit(
         AuthFailure(
           errorMessage:
-              'An error occurred during registration. Please try again.',
+              'An error occurred during registration. Please try again.  $e',
         ),
       );
     }
